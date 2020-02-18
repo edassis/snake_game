@@ -1,5 +1,8 @@
--- Snake game
--- Author: edassis
+-- title:  Snake
+-- author: edassis
+-- script: lua
+-- input:  gamepad
+-- saveid: SnakeGame
 
 Direction={
   [0] = {x = 0, y = -1},    -- up
@@ -247,8 +250,8 @@ end
 
 function genFruit()
   local pos = {x,y}
-  pos.x = math.random(8, 112) // System.sprite_size * System.sprite_size
-  pos.y = math.random(8, 132) // System.sprite_size * System.sprite_size
+  pos.x = math.random(8, 232) // System.sprite_size * System.sprite_size
+  pos.y = math.random(8, 112) // System.sprite_size * System.sprite_size
 
   if pxCollided(pos.x, pos.y) == 15 or pxCollided(pos.x, pos.y) == 6 then   -- Wall color, snake's head color
     genFruit()
