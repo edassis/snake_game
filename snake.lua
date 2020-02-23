@@ -307,71 +307,78 @@ function drawFruit()
 end
 
 
+function input()
+  -- arrows input
+  if btn(0) and plr_last_facing ~= Direction[1] then          -- up && avoid the snake's head to go in the opposite direction
+    Plr.facing = Direction[0]
+    plr_last_facing = Plr.facing
+  elseif btn(1) and plr_last_facing ~= Direction[0] then      -- down
+    Plr.facing = Direction[1]
+    plr_last_facing = Plr.facing
+  elseif btn(2) and plr_last_facing ~= Direction[3] then      -- left
+    Plr.facing = Direction[2]
+    plr_last_facing = Plr.facing
+  elseif btn(3) and plr_last_facing ~= Direction[2] then      -- right
+    Plr.facing = Direction[3]
+    plr_last_facing = Plr.facing
+  end
+end
+
+
+function collision()
+  -- wall collision (white)
+  if pxCollided(Plr.x,Plr.y) == 15 then
+    local aux_time = time()
+    local delay = 1000     -- small break when player dies
+    while (aux_time + delay > time()) do
+    end
+
+    Plr.life = Plr.life - 1
+    Plr.points = 0
+    Plr.facing = Direction[3]
+    plr_last_facing = Plr.facing
+    Plr.tail_len = 0
+    Plr.tail_max_len = 3
+    Plr.x = Game.startposx
+    Plr.y = Game.startposy
+  end
+
+  -- consumible collision
+  -- trace(Plr.x.." "..Plr.y.." "..cellCollided(Plr.x, Plr.y))
+  if cmpScreenSprite(Plr.x, Plr.y, 0) then
+    Game.time_step = Game.time_step - 5
+    
+    Plr.points = Plr.points + 10
+    Plr.tail_max_len = Plr.tail_max_len + 1
+  
+    write_cell(Game.fruitx // 8, Game.fruity // 8, S.bg, true)   -- Clearing old position
+    genFruit()
+  end
+end
+
 
 plr_last_facing = Plr.facing
-delay = 0
 init()
 function TIC()    -- doesn't accept loops
   if Game.run and System.loop == false then
-    -- arrows input
-    if btn(0) and plr_last_facing ~= Direction[1] then          -- up && avoid the snake's head to go in the opposite direction
-      Plr.facing = Direction[0]
-      plr_last_facing = Plr.facing
-    elseif btn(1) and plr_last_facing ~= Direction[0] then      -- down
-      Plr.facing = Direction[1]
-      plr_last_facing = Plr.facing
-    elseif btn(2) and plr_last_facing ~= Direction[3] then      -- left
-      Plr.facing = Direction[2]
-      plr_last_facing = Plr.facing
-    elseif btn(3) and plr_last_facing ~= Direction[2] then      -- right
-      Plr.facing = Direction[3]
-      plr_last_facing = Plr.facing
-    end
+    input()
 
     -- Game "loop"
-    if time() > (Game.current_time + Game.time_step + delay) then
+    if time() > (Game.current_time + Game.time_step) then
       Plr.x = Plr.x + Plr.facing.x * Plr.speed * System.sprite_size
       Plr.y = Plr.y + Plr.facing.y * Plr.speed * System.sprite_size
 
-      -- wall collision (white)
-      if pxCollided(Plr.x,Plr.y) == 15 then
-        delay = 200     -- small break when player dies
-
-        Plr.life = Plr.life - 1
-        Plr.points = 0
-        Plr.facing = Direction[3]
-        plr_last_facing = Plr.facing
-        Plr.tail_len = 0
-        Plr.tail_max_len = 3
-        Plr.x = Game.startposx
-        Plr.y = Game.startposy
-      else
-        delay = 0
-      end
-
-      -- consumible collision
-      -- trace(Plr.x.." "..Plr.y.." "..cellCollided(Plr.x, Plr.y))
-      if cmpScreenSprite(Plr.x, Plr.y, 0) then
-        Game.time_step = Game.time_step - 5
-        
-        Plr.points = Plr.points + 10
-        Plr.tail_max_len = Plr.tail_max_len + 1
-        
-        write_cell(Game.fruitx // 8, Game.fruity // 8, S.bg, true)   -- Clearing old position
-        genFruit()
-      end
+      collision()
 
       __CLS(0, 0, 120)
       -- cls(0)
       drawMap()
-      -- score()
       drawPlayer(true)
 
       -- Player without lifes
       if gameover() then Game.run = false end
 
       -- updating counters
-      Plr.points = Plr.points + 1 
       Game.current_time = time()
     end -- game running
 
