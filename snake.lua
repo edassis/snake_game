@@ -8,7 +8,7 @@ Direction={
   [0] = {x = 0, y = -1},    -- up
   [1] = {x = 0, y = 1},     -- down
   [2] = {x = -1, y = 0},    -- left
-  [3] = {x = 1, y = 0}      -- right
+  [3] = {x = 1, y = 0},      -- right
 }
 
 System={
@@ -34,7 +34,7 @@ Plr={
   x = nil,
   y = nil,
   vx = nil,
-  vy = nil
+  vy = nil,
 }
 
 Game={
@@ -46,13 +46,13 @@ Game={
   map_lv = 1,
   startposx = 120,
   startposy = 64,
-  run = false
+  run = false,
 }
 
 S={
   fruit=0,
   wall=254,
-  bg=255
+  bg=255,
 }
 
 -- GENERAL FUNCTIONS
